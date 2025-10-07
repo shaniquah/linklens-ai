@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LinkedinController;
+use App\Livewire\LinkedinDashboard;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -32,6 +34,11 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    // LinkedIn Automation Routes
+    Route::get('/linkedin', LinkedinDashboard::class)->name('linkedin.dashboard');
+    Route::get('/auth/linkedin', [LinkedinController::class, 'redirect'])->name('linkedin.auth');
+    Route::get('/auth/linkedin/callback', [LinkedinController::class, 'callback'])->name('linkedin.callback');
 });
 
 require __DIR__.'/auth.php';
