@@ -19,7 +19,7 @@ class LinkedinDashboard extends Component
 
     public function mount()
     {
-        $this->profile = auth()->user()->linkedinProfile;
+        $this->profile = auth()->user()->linkedinProfile()->first();
         $this->loadData();
     }
 

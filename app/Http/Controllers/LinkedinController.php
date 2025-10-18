@@ -15,7 +15,7 @@ class LinkedinController extends Controller
             'response_type' => 'code',
             'client_id' => config('services.linkedin.client_id'),
             'redirect_uri' => config('services.linkedin.redirect'),
-            'scope' => 'r_liteprofile r_emailaddress w_member_social',
+            'scope' => 'openid profile email w_member_social',
         ]);
 
         return redirect("https://www.linkedin.com/oauth/v2/authorization?{$params}");
@@ -23,7 +23,7 @@ class LinkedinController extends Controller
 
     public function callback(Request $request)
     {
-        $response = Http::post('https://www.linkedin.com/oauth/v2/accessToken', [
+        $response = Http::asForm()->post('https://www.linkedin.com/oauth/v2/accessToken', [
             'grant_type' => 'authorization_code',
             'code' => $request->code,
             'redirect_uri' => config('services.linkedin.redirect'),
@@ -33,14 +33,22 @@ class LinkedinController extends Controller
 
         $token = $response->json();
         
+        if (!isset($token['access_token'])) {
+            return redirect('/dashboard')->with('error', 'LinkedIn connection failed: ' . ($token['error_description'] ?? 'Unknown error'));
+        }
+        
         $profile = Http::withToken($token['access_token'])
-            ->get('https://api.linkedin.com/v2/people/~')
+            ->get('https://api.linkedin.com/v2/userinfo')
             ->json();
+
+        if (!isset($profile['sub'])) {
+            return redirect('/dashboard')->with('error', 'Failed to get LinkedIn profile data');
+        }
 
         LinkedinProfile::updateOrCreate(
             ['user_id' => Auth::id()],
             [
-                'linkedin_id' => $profile['id'],
+                'linkedin_id' => $profile['sub'],
                 'access_token' => $token['access_token'],
                 'token_expires_at' => now()->addSeconds($token['expires_in']),
                 'profile_data' => $profile,
