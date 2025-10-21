@@ -47,7 +47,7 @@
                         </div>
                         <button wire:click="generatePost"
                             class="mt-4 bg-green-500 text-white px-4 py-2 rounded text-sm">
-                            Generate Post
+                            Configure Post Generation
                         </button>
                     </div>
                 </div>
@@ -100,4 +100,108 @@
             </div>
         @endif
     </div>
+
+    <!-- Post Generation Modal -->
+    @if($showPostModal)
+    <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showPostModal') }" x-show="show">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
+
+            <div class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-zinc-500 shadow-xl rounded-2xl">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-medium text-gray-900">Configure Post Generation</h3>
+                    <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form wire:submit.prevent="savePostSettings" class="space-y-6">
+                    <!-- Post Frequency -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Frequency</label>
+                        <select wire:model="postFrequency" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="bi-weekly">Bi-weekly</option>
+                        </select>
+                    </div>
+
+                    <!-- Approval Required -->
+                    <div class="flex items-center">
+                        <input type="checkbox" wire:model="requireApproval" id="approval" class="mr-2">
+                        <label for="approval" class="text-sm font-medium text-gray-700">Require approval before posting</label>
+                    </div>
+
+                    <!-- Speaker Voice -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Speaker Voice</label>
+                        <select wire:model="speakerVoice" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="professional">Professional</option>
+                            <option value="casual">Casual</option>
+                            <option value="authoritative">Authoritative</option>
+                            <option value="friendly">Friendly</option>
+                        </select>
+                    </div>
+
+                    <!-- Post Themes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Themes</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="postThemes" value="industry_insights" class="mr-2">
+                                <span class="text-sm">Industry Insights</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="postThemes" value="career_tips" class="mr-2">
+                                <span class="text-sm">Career Tips</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="postThemes" value="networking" class="mr-2">
+                                <span class="text-sm">Networking</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="postThemes" value="motivation" class="mr-2">
+                                <span class="text-sm">Motivation</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tone -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tone</label>
+                        <select wire:model="tone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="informative">Informative</option>
+                            <option value="inspirational">Inspirational</option>
+                            <option value="educational">Educational</option>
+                            <option value="promotional">Promotional</option>
+                        </select>
+                    </div>
+
+                    <!-- Diction -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Diction</label>
+                        <select wire:model="diction" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="business">Business</option>
+                            <option value="technical">Technical</option>
+                            <option value="conversational">Conversational</option>
+                            <option value="academic">Academic</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" wire:click="closeModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
+                            Save & Generate
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

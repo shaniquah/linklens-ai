@@ -16,6 +16,17 @@ class LinkedinDashboard extends Component
     public $recentPosts;
     public $newFilterName = '';
     public $newFilterCriteria = [];
+    
+    // Modal state
+    public $showPostModal = false;
+    
+    // Post generation settings
+    public $postFrequency = 'daily';
+    public $requireApproval = true;
+    public $speakerVoice = 'professional';
+    public $postThemes = [];
+    public $tone = 'informative';
+    public $diction = 'business';
 
     public function mount()
     {
@@ -56,8 +67,35 @@ class LinkedinDashboard extends Component
 
     public function generatePost()
     {
-        GenerateAutomatedPost::dispatch($this->profile);
-        session()->flash('message', 'Generating new post...');
+        $this->showPostModal = true;
+    }
+    
+    public function savePostSettings()
+    {
+        $this->validate([
+            'postFrequency' => 'required|in:daily,weekly,bi-weekly',
+            'speakerVoice' => 'required|in:professional,casual,authoritative,friendly',
+            'tone' => 'required|in:informative,inspirational,educational,promotional',
+            'diction' => 'required|in:business,technical,conversational,academic',
+        ]);
+        
+        // Save settings and generate post
+        GenerateAutomatedPost::dispatch($this->profile, [
+            'frequency' => $this->postFrequency,
+            'approval_required' => $this->requireApproval,
+            'voice' => $this->speakerVoice,
+            'themes' => $this->postThemes,
+            'tone' => $this->tone,
+            'diction' => $this->diction,
+        ]);
+        
+        $this->showPostModal = false;
+        session()->flash('message', 'Post generation configured and started!');
+    }
+    
+    public function closeModal()
+    {
+        $this->showPostModal = false;
     }
 
     public function createFilter()
