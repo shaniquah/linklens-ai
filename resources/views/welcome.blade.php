@@ -9,7 +9,8 @@
     @fluxAppearance
 </head>
 
-<body class="bg-black text-white h-screen overflow-hidden snap-y snap-mandatory">
+<body class="bg-black text-white">
+    <div class="h-screen overflow-y-scroll snap-y snap-mandatory">
     <style>
         @keyframes float1 {
 
@@ -89,7 +90,7 @@
     </div>
 
     <!-- Hero Section -->
-    <section id="hero" class="relative h-screen flex items-center justify-center snap-start">
+    <section id="hero" class="relative h-screen flex items-center justify-center snap-start snap-always">
         <div class="container mx-auto px-4 py-16 relative z-10">
             <div class="text-center">
                 <h1
@@ -123,7 +124,7 @@
 
     <!-- Features Section -->
     <section id="features"
-        class="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden snap-start pt-12">
+        class="relative h-screen w-full flex flex-col items-center justify-center snap-start snap-always pt-12">
         <h1 class="text-4xl sm:text-5xl lg:text-6xl mt-10 font-extrabold tracking-tight text-white text-center mb-8">
             <span class="text-white">Exciting</span>
             <span class="text-sky-400">Features</span>
@@ -155,6 +156,7 @@
             </div>
         </div>
     </section>
+    </div>
     @fluxScripts
 </body>
 
