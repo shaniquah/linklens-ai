@@ -118,6 +118,12 @@ class LinkedinDashboard extends Component
         $this->loadData();
     }
 
+    public function addNewPost($post)
+    {
+        $this->recentPosts->prepend((object) $post['post']);
+        $this->recentPosts = $this->recentPosts->take(5);
+    }
+    
     public function render()
     {
         return view('livewire.linkedin-dashboard');

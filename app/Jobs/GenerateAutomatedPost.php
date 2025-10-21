@@ -16,7 +16,8 @@ class GenerateAutomatedPost implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        private LinkedinProfile $profile
+        private LinkedinProfile $profile,
+        private array $settings = []
     ) {}
 
     public function handle(): void
@@ -39,26 +40,76 @@ class GenerateAutomatedPost implements ShouldQueue
         $post = AutomatedPost::create([
             'user_id' => $this->profile->user_id,
             'content' => $content,
-            'scheduled_at' => now(),
+            'status' => $this->settings['approval_required'] ?? false ? 'pending' : 'ready',
+            'scheduled_at' => $this->calculateScheduleTime(),
         ]);
+        
+        // Broadcast the new post
+        \App\Events\PostCreated::dispatch($post);
 
-        $this->publishPost($post);
+        // Only auto-publish if approval not required
+        if (!($this->settings['approval_required'] ?? false)) {
+            $this->publishPost($post);
+        }
     }
 
     private function generatePostContent(): string
     {
-        $prompts = [
-            "Share a professional insight about industry trends",
-            "Discuss the importance of networking in career growth",
-            "Share a motivational quote about professional development",
-            "Highlight the value of continuous learning",
-            "Discuss work-life balance strategies",
-        ];
-
-        $prompt = $prompts[array_rand($prompts)];
+        $voice = $this->settings['voice'] ?? 'professional';
+        $tone = $this->settings['tone'] ?? 'informative';
+        $themes = $this->settings['themes'] ?? ['industry_insights'];
+        $diction = $this->settings['diction'] ?? 'business';
         
-        // Simple content generation - in production, use OpenAI API
-        return "🚀 " . $prompt . " #Professional #Growth #LinkedIn";
+        $themeTemplates = [
+            'industry_insights' => [
+                'The future of {industry} is being shaped by {trend}. Here\'s what professionals need to know...',
+                'Key insight: {insight} is transforming how we approach {area}.',
+            ],
+            'career_tips' => [
+                'Career tip: {tip} can accelerate your professional growth.',
+                'One strategy that changed my career trajectory: {strategy}',
+            ],
+            'networking' => [
+                'Networking isn\'t about collecting contacts—it\'s about {value}.',
+                'The best networking happens when you {approach}.',
+            ],
+            'motivation' => [
+                'Remember: {motivation_quote}',
+                'Every challenge is an opportunity to {growth_area}.',
+            ],
+        ];
+        
+        $selectedTheme = $themes[array_rand($themes)];
+        $templates = $themeTemplates[$selectedTheme] ?? $themeTemplates['industry_insights'];
+        $template = $templates[array_rand($templates)];
+        
+        // Simple template filling - in production, use OpenAI API
+        $content = str_replace(
+            ['{industry}', '{trend}', '{insight}', '{area}', '{tip}', '{strategy}', '{value}', '{approach}', '{motivation_quote}', '{growth_area}'],
+            ['technology', 'AI automation', 'Data-driven decision making', 'professional development', 'continuous learning', 'building authentic relationships', 'creating mutual value', 'focus on helping others first', 'Success is a journey, not a destination', 'develop new skills'],
+            $template
+        );
+        
+        $emoji = match($tone) {
+            'inspirational' => '✨',
+            'educational' => '📚',
+            'promotional' => '🚀',
+            default => '💡'
+        };
+        
+        return $emoji . ' ' . $content . ' #LinkedIn #Professional #Growth';
+    }
+    
+    private function calculateScheduleTime(): \Carbon\Carbon
+    {
+        $frequency = $this->settings['frequency'] ?? 'daily';
+        
+        return match($frequency) {
+            'daily' => now()->addDay(),
+            'weekly' => now()->addWeek(),
+            'bi-weekly' => now()->addWeeks(2),
+            default => now()->addDay()
+        };
     }
 
     private function publishPost(AutomatedPost $post): void

@@ -71,7 +71,7 @@
                     <div class="space-y-2">
                         @foreach ($filters as $filter)
                             <div class="flex items-center justify-between bg-gray-50 p-3 rounded">
-                                <span class="font-medium">{{ $filter->name }}</span>
+                                <span class="font-medium text-gray-500">{{ $filter->name }}</span>
                                 <button wire:click="deleteFilter({{ $filter->id }})"
                                     class="text-red-600 hover:text-red-800">
                                     Delete
@@ -107,7 +107,7 @@
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
 
-            <div class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-zinc-500 shadow-xl rounded-2xl">
+            <div class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-zinc-500 text-left align-middle transition-all transform bg-sky-50 shadow-xl rounded-2xl">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-medium text-gray-900">Configure Post Generation</h3>
                     <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600">
@@ -205,3 +205,14 @@
     </div>
     @endif
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Echo !== 'undefined') {
+            Echo.private('user.{{ auth()->id() }}')
+                .listen('PostCreated', (e) => {
+                    @this.call('addNewPost', e);
+                });
+        }
+    });
+</script>

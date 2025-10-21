@@ -154,5 +154,19 @@
         {{ $slot }}
 
         @fluxScripts
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script>
+            window.Pusher = Pusher;
+            import Echo from 'laravel-echo';
+            window.Echo = new Echo({
+                broadcaster: 'reverb',
+                key: '{{ config('broadcasting.connections.reverb.key') }}',
+                wsHost: '{{ config('broadcasting.connections.reverb.host') }}',
+                wsPort: {{ config('broadcasting.connections.reverb.port') }},
+                wssPort: {{ config('broadcasting.connections.reverb.port') }},
+                forceTLS: false,
+                enabledTransports: ['ws', 'wss'],
+            });
+        </script>
     </body>
 </html>
