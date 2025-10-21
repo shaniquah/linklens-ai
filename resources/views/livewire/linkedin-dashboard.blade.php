@@ -89,10 +89,20 @@
                     <div class="space-y-4">
                         @foreach ($recentPosts as $post)
                             <div class="border-l-4 {{ $post->status === 'posted' ? 'border-green-400' : ($post->status === 'failed' ? 'border-red-400' : 'border-yellow-400') }} pl-4">
-                                <p class="text-sm text-gray-600">{{ $post->content }}</p>
-                                <p class="text-xs text-gray-400 mt-1">
-                                    Status: {{ ucfirst($post->status) }} • {{ $post->created_at->diffForHumans() }}
-                                </p>
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-600">{{ $post->content }}</p>
+                                        <p class="text-xs text-gray-400 mt-1">
+                                            Status: {{ ucfirst($post->status) }} • {{ $post->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                    @if($post->status === 'failed')
+                                        <button wire:click="retryPost({{ $post->id }})" 
+                                            class="ml-3 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
+                                            Retry
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         @endforeach
                     </div>

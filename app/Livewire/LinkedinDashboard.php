@@ -7,6 +7,7 @@ use App\Jobs\ProcessConnectionRequests;
 use App\Models\AutomatedPost;
 use App\Models\ConnectionFilter;
 use App\Models\LinkedinProfile;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class LinkedinDashboard extends Component
@@ -118,6 +119,38 @@ class LinkedinDashboard extends Component
         $this->loadData();
     }
 
+    public function retryPost($postId)
+    {
+        $post = AutomatedPost::where('id', $postId)
+            ->where('user_id', auth()->id())
+            ->where('status', 'failed')
+            ->first();
+            
+        if ($post) {
+            $response = Http::withToken($this->profile->access_token)
+                ->post('https://api.linkedin.com/v2/ugcPosts', [
+                    'author' => "urn:li:person:{$this->profile->linkedin_id}",
+                    'lifecycleState' => 'PUBLISHED',
+                    'specificContent' => [
+                        'com.linkedin.ugc.ShareContent' => [
+                            'shareCommentary' => ['text' => $post->content],
+                            'shareMediaCategory' => 'NONE',
+                        ],
+                    ],
+                    'visibility' => ['com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'],
+                ]);
+
+            if ($response->successful()) {
+                $post->markAsPosted();
+                session()->flash('message', 'Post published successfully!');
+            } else {
+                session()->flash('message', 'Failed to publish post. Please try again.');
+            }
+            
+            $this->loadData();
+        }
+    }
+    
     public function addNewPost($post)
     {
         $this->recentPosts->prepend((object) $post['post']);
