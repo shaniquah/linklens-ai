@@ -22,6 +22,7 @@ class LinkedinDashboard extends Component
     public $showPostModal = false;
     
     // Post generation settings
+    public $postType = 'medium';
     public $postFrequency = 'daily';
     public $requireApproval = true;
     public $speakerVoice = 'professional';
@@ -74,6 +75,7 @@ class LinkedinDashboard extends Component
     public function savePostSettings()
     {
         $this->validate([
+            'postType' => 'required|in:short,medium,long',
             'postFrequency' => 'required|in:daily,weekly,bi-weekly',
             'speakerVoice' => 'required|in:professional,casual,authoritative,friendly',
             'tone' => 'required|in:informative,inspirational,educational,promotional',
@@ -82,6 +84,7 @@ class LinkedinDashboard extends Component
         
         // Save settings and generate post
         GenerateAutomatedPost::dispatch($this->profile, [
+            'type' => $this->postType,
             'frequency' => $this->postFrequency,
             'approval_required' => $this->requireApproval,
             'voice' => $this->speakerVoice,

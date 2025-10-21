@@ -128,6 +128,16 @@
                 </div>
 
                 <form wire:submit.prevent="savePostSettings" class="space-y-6">
+                    <!-- Post Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Type</label>
+                        <select wire:model="postType" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="short">Short Post (1-2 sentences)</option>
+                            <option value="medium">Medium Post (3-5 sentences)</option>
+                            <option value="long">Long Post/Article (Full content)</option>
+                        </select>
+                    </div>
+                    
                     <!-- Post Frequency -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Post Frequency</label>

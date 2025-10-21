@@ -36,14 +36,14 @@ class GenerateAutomatedPost implements ShouldQueue
         }
 
         $content = $this->generatePostContent();
-        
+
         $post = AutomatedPost::create([
             'user_id' => $this->profile->user_id,
             'content' => $content,
             'status' => $this->settings['approval_required'] ?? false ? 'pending' : 'ready',
             'scheduled_at' => $this->calculateScheduleTime(),
         ]);
-        
+
         // Broadcast the new post
         \App\Events\PostCreated::dispatch($post);
 
@@ -55,55 +55,71 @@ class GenerateAutomatedPost implements ShouldQueue
 
     private function generatePostContent(): string
     {
+        $type = $this->settings['type'] ?? 'medium';
         $voice = $this->settings['voice'] ?? 'professional';
         $tone = $this->settings['tone'] ?? 'informative';
         $themes = $this->settings['themes'] ?? ['industry_insights'];
         $diction = $this->settings['diction'] ?? 'business';
-        
-        $themeTemplates = [
-            'industry_insights' => [
-                'The future of {industry} is being shaped by {trend}. Here\'s what professionals need to know...',
-                'Key insight: {insight} is transforming how we approach {area}.',
-            ],
-            'career_tips' => [
-                'Career tip: {tip} can accelerate your professional growth.',
-                'One strategy that changed my career trajectory: {strategy}',
-            ],
-            'networking' => [
-                'Networking isn\'t about collecting contacts—it\'s about {value}.',
-                'The best networking happens when you {approach}.',
-            ],
-            'motivation' => [
-                'Remember: {motivation_quote}',
-                'Every challenge is an opportunity to {growth_area}.',
-            ],
-        ];
-        
+
         $selectedTheme = $themes[array_rand($themes)];
-        $templates = $themeTemplates[$selectedTheme] ?? $themeTemplates['industry_insights'];
-        $template = $templates[array_rand($templates)];
-        
-        // Simple template filling - in production, use OpenAI API
-        $content = str_replace(
-            ['{industry}', '{trend}', '{insight}', '{area}', '{tip}', '{strategy}', '{value}', '{approach}', '{motivation_quote}', '{growth_area}'],
-            ['technology', 'AI automation', 'Data-driven decision making', 'professional development', 'continuous learning', 'building authentic relationships', 'creating mutual value', 'focus on helping others first', 'Success is a journey, not a destination', 'develop new skills'],
-            $template
-        );
-        
+
+        $content = match($type) {
+            'short' => $this->generateShortPost($selectedTheme, $tone),
+            'medium' => $this->generateMediumPost($selectedTheme, $tone),
+            'long' => $this->generateLongPost($selectedTheme, $tone),
+            default => $this->generateMediumPost($selectedTheme, $tone)
+        };
+
         $emoji = match($tone) {
             'inspirational' => '✨',
             'educational' => '📚',
             'promotional' => '🚀',
             default => '💡'
         };
-        
+
         return $emoji . ' ' . $content . ' #LinkedIn #Professional #Growth';
     }
-    
+
+    private function generateShortPost($theme, $tone): string
+    {
+        $templates = [
+            'industry_insights' => 'AI is reshaping how we work.',
+            'career_tips' => 'Network before you need it.',
+            'networking' => 'Quality connections over quantity.',
+            'motivation' => 'Every setback is a setup for a comeback.',
+        ];
+
+        return $templates[$theme] ?? $templates['industry_insights'];
+    }
+
+    private function generateMediumPost($theme, $tone): string
+    {
+        $templates = [
+            'industry_insights' => 'The future of technology is being shaped by AI automation. Here\'s what professionals need to know: adapt quickly, learn continuously, and embrace change as your competitive advantage.',
+            'career_tips' => 'Career tip: Build your network before you need it. The best opportunities often come through relationships, not job boards. Invest time in genuine connections today.',
+            'networking' => 'Networking isn\'t about collecting contacts—it\'s about creating mutual value. Focus on how you can help others first, and watch your professional relationships flourish.',
+            'motivation' => 'Remember: Success is a journey, not a destination. Every challenge you face today is building the resilience you\'ll need for tomorrow\'s opportunities.',
+        ];
+
+        return $templates[$theme] ?? $templates['industry_insights'];
+    }
+
+    private function generateLongPost($theme, $tone): string
+    {
+        $templates = [
+            'industry_insights' => "The AI revolution isn't coming—it's here. And it's transforming every industry at an unprecedented pace.\n\nWhat does this mean for professionals?\n\n• Routine tasks are being automated\n• New roles are emerging that didn't exist 5 years ago\n• The half-life of skills is shrinking rapidly\n\nThe key to thriving in this environment? Continuous learning and adaptability.\n\nStart by identifying which aspects of your role can be enhanced (not replaced) by AI. Then, focus on developing uniquely human skills: creativity, emotional intelligence, complex problem-solving, and strategic thinking.\n\nThe future belongs to those who can work alongside AI, not against it.",
+            'career_tips' => "Here's the career advice I wish someone had given me 10 years ago:\n\nYour network is your net worth—but not in the way you think.\n\nIt's not about having 10,000 LinkedIn connections. It's about having 10 people who:\n• Know your work quality\n• Trust your character\n• Understand your goals\n• Will advocate for you when you're not in the room\n\nHow do you build this kind of network?\n\n1. Be genuinely helpful to others\n2. Share knowledge freely\n3. Celebrate others' successes\n4. Stay in touch consistently\n5. Be authentic in all interactions\n\nRemember: People don't refer strangers. They refer people they know, like, and trust.",
+            'networking' => "The biggest networking mistake I see professionals make?\n\nTreating networking like a transaction.\n\n'Hi, I'm looking for a job. Can you help?'\n\nThis approach fails because it's entirely one-sided.\n\nEffective networking is about building relationships, not collecting favors.\n\nHere's a better approach:\n\n1. Lead with curiosity, not need\n2. Ask thoughtful questions about their work\n3. Share relevant insights or resources\n4. Follow up with value, not requests\n5. Maintain relationships during good times\n\nWhen you focus on giving first, receiving becomes natural.\n\nThe best networkers are the best givers.",
+            'motivation' => "Failure is not the opposite of success—it's a stepping stone to it.\n\nEvery successful person has a graveyard of failed attempts behind them. The difference? They didn't let failure define them.\n\nHere's what I've learned about resilience:\n\n• Failure is feedback, not a verdict\n• Every setback teaches you something valuable\n• Your response to failure matters more than the failure itself\n• Persistence beats perfection every time\n\nThe next time you face a setback, ask yourself:\n1. What can I learn from this?\n2. How can I improve next time?\n3. What opportunity might this create?\n\nYour greatest comeback is always ahead of you, not behind you."
+        ];
+
+        return $templates[$theme] ?? $templates['industry_insights'];
+    }
+
     private function calculateScheduleTime(): \Carbon\Carbon
     {
         $frequency = $this->settings['frequency'] ?? 'daily';
-        
+
         return match($frequency) {
             'daily' => now()->addDay(),
             'weekly' => now()->addWeek(),
