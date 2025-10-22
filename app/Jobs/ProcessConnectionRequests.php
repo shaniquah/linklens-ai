@@ -51,15 +51,125 @@ class ProcessConnectionRequests implements ShouldQueue
     private function shouldAcceptConnection(array $request, $filters): bool
     {
         if ($filters->isEmpty()) {
-            return true;
+            return true; // Accept all if no filters
+        }
+
+        $profile = $this->getProfileDetails($request['from']['id'] ?? '');
+        
+        if (!$profile) {
+            return false; // Reject if can't get profile data
         }
 
         foreach ($filters as $filter) {
-            if ($filter->matchesProfile($request['from'] ?? [])) {
-                return true;
+            if ($this->matchesFilterCriteria($profile, $filter->criteria)) {
+                return true; // Accept if matches any filter
             }
         }
 
+        return false; // Reject if no filters match
+    }
+    
+    private function getProfileDetails(string $profileId): ?array
+    {
+        if (empty($profileId)) {
+            return null;
+        }
+        
+        try {
+            $response = Http::withToken($this->profile->access_token)
+                ->get("https://api.linkedin.com/v2/people/(id:{$profileId})", [
+                    'projection' => '(id,firstName,lastName,headline,industry,location,positions)'
+                ]);
+                
+            return $response->successful() ? $response->json() : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+    
+    private function matchesFilterCriteria(array $profile, array $criteria): bool
+    {
+        foreach ($criteria as $key => $value) {
+            if (!$this->checkCriterion($profile, $key, $value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private function checkCriterion(array $profile, string $key, $value): bool
+    {
+        return match($key) {
+            'industry' => $this->matchesIndustry($profile, $value),
+            'location' => $this->matchesLocation($profile, $value),
+            'job_title' => $this->matchesJobTitle($profile, $value),
+            'company_size' => $this->matchesCompanySize($profile, $value),
+            'keywords' => $this->matchesKeywords($profile, $value),
+            default => true
+        };
+    }
+    
+    private function matchesIndustry(array $profile, $targetIndustry): bool
+    {
+        $industry = $profile['industry']['name'] ?? '';
+        return stripos($industry, $targetIndustry) !== false;
+    }
+    
+    private function matchesLocation(array $profile, $targetLocation): bool
+    {
+        $location = $profile['location']['name'] ?? '';
+        return stripos($location, $targetLocation) !== false;
+    }
+    
+    private function matchesJobTitle(array $profile, $targetTitle): bool
+    {
+        $headline = $profile['headline'] ?? '';
+        $positions = $profile['positions']['elements'] ?? [];
+        
+        // Check headline
+        if (stripos($headline, $targetTitle) !== false) {
+            return true;
+        }
+        
+        // Check current position
+        foreach ($positions as $position) {
+            $title = $position['title'] ?? '';
+            if (stripos($title, $targetTitle) !== false) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private function matchesCompanySize(array $profile, int $minSize): bool
+    {
+        $positions = $profile['positions']['elements'] ?? [];
+        
+        foreach ($positions as $position) {
+            $companySize = $position['company']['staffCount'] ?? 0;
+            if ($companySize >= $minSize) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private function matchesKeywords(array $profile, array $keywords): bool
+    {
+        $searchText = strtolower(implode(' ', [
+            $profile['headline'] ?? '',
+            $profile['firstName'] ?? '',
+            $profile['lastName'] ?? '',
+        ]));
+        
+        foreach ($keywords as $keyword) {
+            if (stripos($searchText, $keyword) !== false) {
+                return true;
+            }
+        }
+        
         return false;
     }
 

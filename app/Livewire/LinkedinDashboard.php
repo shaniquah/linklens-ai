@@ -16,7 +16,19 @@ class LinkedinDashboard extends Component
     public $filters;
     public $recentPosts;
     public $newFilterName = '';
-    public $newFilterCriteria = [];
+    public $filterIndustry = '';
+    public $filterLocation = '';
+    public $filterJobTitle = '';
+    public $filterCompanySize = '';
+    public $filterKeywords = [];
+    public $showOtherKeyword = false;
+    public $customKeyword = '';
+    
+    // Dropdown options
+    public $industries = [];
+    public $locations = [];
+    public $jobTitles = [];
+    public $availableKeywords = [];
     
     // Modal state
     public $showPostModal = false;
@@ -34,6 +46,87 @@ class LinkedinDashboard extends Component
     {
         $this->profile = auth()->user()->linkedinProfile()->first();
         $this->loadData();
+        $this->loadLinkedInOptions();
+    }
+    
+    public function updatedProfile()
+    {
+        // This ensures the UI stays in sync when profile is updated
+        $this->profile->refresh();
+    }
+    
+    public function loadLinkedInOptions()
+    {
+        if ($this->profile) {
+            $this->industries = $this->fetchIndustries();
+            $this->locations = $this->fetchLocations();
+            $this->jobTitles = $this->fetchJobTitles();
+        } else {
+            // Fallback static data
+            $this->industries = ['Technology', 'Healthcare', 'Finance', 'Education', 'Manufacturing'];
+            $this->locations = ['San Francisco, CA', 'New York, NY', 'Los Angeles, CA', 'Remote'];
+            $this->jobTitles = ['Software Engineer', 'Product Manager', 'Data Scientist', 'Designer'];
+        }
+        
+        $this->availableKeywords = [
+            'AI', 'Machine Learning', 'Cloud', 'AWS', 'React', 'Python', 'JavaScript',
+            'Leadership', 'Strategy', 'Innovation', 'Startup', 'Enterprise',
+            'Digital Transformation', 'Agile', 'DevOps', 'Analytics', 'SaaS'
+        ];
+    }
+    
+    private function fetchIndustries()
+    {
+        try {
+            $response = Http::withToken($this->profile->access_token)
+                ->get('https://api.linkedin.com/v2/industries');
+            
+            if ($response->successful()) {
+                return collect($response->json()['elements'] ?? [])
+                    ->pluck('localizedName')
+                    ->toArray();
+            }
+        } catch (\Exception $e) {}
+        
+        return ['Technology', 'Healthcare', 'Finance', 'Education', 'Manufacturing', 'Retail', 'Consulting'];
+    }
+    
+    private function fetchLocations()
+    {
+        try {
+            $response = Http::withToken($this->profile->access_token)
+                ->get('https://api.linkedin.com/v2/locations', [
+                    'q' => 'typeahead',
+                    'text' => 'United States'
+                ]);
+            
+            if ($response->successful()) {
+                return collect($response->json()['elements'] ?? [])
+                    ->pluck('displayName')
+                    ->toArray();
+            }
+        } catch (\Exception $e) {}
+        
+        return ['San Francisco, CA', 'New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Remote'];
+    }
+    
+    private function fetchJobTitles()
+    {
+        try {
+            $response = Http::withToken($this->profile->access_token)
+                ->get('https://api.linkedin.com/v2/titles', [
+                    'q' => 'typeahead',
+                    'text' => 'Software'
+                ]);
+            
+            if ($response->successful()) {
+                return collect($response->json()['elements'] ?? [])
+                    ->pluck('localizedName')
+                    ->toArray();
+            }
+        } catch (\Exception $e) {}
+        
+        return ['Software Engineer', 'Product Manager', 'Data Scientist', 'Designer', 'Marketing Manager'];
     }
 
     public function loadData()
@@ -47,18 +140,32 @@ class LinkedinDashboard extends Component
 
     public function toggleAutoAccept()
     {
+        if (!$this->profile) {
+            return;
+        }
+        
         $this->profile->update([
             'auto_accept_connections' => !$this->profile->auto_accept_connections
         ]);
         $this->profile->refresh();
+        
+        $status = $this->profile->auto_accept_connections ? 'enabled' : 'disabled';
+        session()->flash('message', "Auto-accept connections {$status}.");
     }
 
     public function togglePostAutomation()
     {
+        if (!$this->profile) {
+            return;
+        }
+        
         $this->profile->update([
             'post_automation_enabled' => !$this->profile->post_automation_enabled
         ]);
         $this->profile->refresh();
+        
+        $status = $this->profile->post_automation_enabled ? 'enabled' : 'disabled';
+        session()->flash('message', "Post automation {$status}.");
     }
 
     public function processConnections()
@@ -102,15 +209,59 @@ class LinkedinDashboard extends Component
         $this->showPostModal = false;
     }
 
+    public function toggleOtherKeyword()
+    {
+        $this->showOtherKeyword = !$this->showOtherKeyword;
+        if (!$this->showOtherKeyword) {
+            $this->customKeyword = '';
+        }
+    }
+    
+    public function addCustomKeyword()
+    {
+        if (!empty($this->customKeyword)) {
+            $this->filterKeywords[] = $this->customKeyword;
+            $this->customKeyword = '';
+            $this->showOtherKeyword = false;
+        }
+    }
+
     public function createFilter()
     {
+        if (empty($this->newFilterName)) {
+            return;
+        }
+        
+        $criteria = [];
+        
+        if (!empty($this->filterIndustry)) {
+            $criteria['industry'] = $this->filterIndustry;
+        }
+        
+        if (!empty($this->filterLocation)) {
+            $criteria['location'] = $this->filterLocation;
+        }
+        
+        if (!empty($this->filterJobTitle)) {
+            $criteria['job_title'] = $this->filterJobTitle;
+        }
+        
+        if (!empty($this->filterCompanySize)) {
+            $criteria['company_size'] = (int) $this->filterCompanySize;
+        }
+        
+        if (!empty($this->filterKeywords)) {
+            $criteria['keywords'] = $this->filterKeywords;
+        }
+
         ConnectionFilter::create([
             'user_id' => auth()->id(),
             'name' => $this->newFilterName,
-            'criteria' => $this->newFilterCriteria,
+            'criteria' => $criteria,
         ]);
 
-        $this->reset(['newFilterName', 'newFilterCriteria']);
+        $this->reset(['newFilterName', 'filterIndustry', 'filterLocation', 'filterJobTitle', 'filterCompanySize', 'showOtherKeyword', 'customKeyword']);
+        $this->filterKeywords = [];
         $this->loadData();
     }
 
@@ -120,6 +271,18 @@ class LinkedinDashboard extends Component
             ->where('user_id', auth()->id())
             ->delete();
         $this->loadData();
+    }
+    
+    public function toggleFilter($filterId)
+    {
+        $filter = ConnectionFilter::where('id', $filterId)
+            ->where('user_id', auth()->id())
+            ->first();
+            
+        if ($filter) {
+            $filter->update(['is_active' => !$filter->is_active]);
+            $this->loadData();
+        }
     }
 
     public function retryPost($postId)

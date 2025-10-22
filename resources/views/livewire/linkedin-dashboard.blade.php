@@ -23,10 +23,7 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Automation</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Auto-accept connections</span>
-                            <button wire:click="toggleAutoAccept"
-                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $profile->auto_accept_connections ? 'bg-blue-600' : 'bg-gray-200' }}">
-                                <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $profile->auto_accept_connections ? 'translate-x-5' : 'translate-x-0' }}"></span>
-                            </button>
+                            <flux:switch :checked="$profile->auto_accept_connections" wire:click="toggleAutoAccept" class="blue-switch" />
                         </div>
                         <button wire:click="processConnections"
                             class="mt-4 bg-blue-500 text-white px-4 py-2 rounded text-sm">
@@ -40,10 +37,7 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Post Automation</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Auto-generate posts</span>
-                            <button wire:click="togglePostAutomation"
-                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $profile->post_automation_enabled ? 'bg-blue-600' : 'bg-gray-200' }}">
-                                <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $profile->post_automation_enabled ? 'translate-x-5' : 'translate-x-0' }}"></span>
-                            </button>
+                            <flux:switch :checked="$profile->post_automation_enabled" wire:click="togglePostAutomation" class="blue-switch" />
                         </div>
                         <button wire:click="generatePost"
                             class="mt-4 bg-green-500 text-white px-4 py-2 rounded text-sm">
@@ -58,12 +52,59 @@
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Filters</h3>
 
-                    <div class="mb-4">
-                        <input wire:model="newFilterName"
-                            placeholder="Filter name"
-                            class="border rounded px-3 py-2 mr-2">
-                        <button wire:click="createFilter"
-                            class="bg-blue-500 text-white px-4 py-2 rounded">
+                    <div class="mb-6 text-zinc-500 space-y-4">
+                        <input wire:model="newFilterName" placeholder="Filter name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <select wire:model="filterIndustry" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Industry</option>
+                                @foreach($industries as $industry)
+                                    <option value="{{ $industry }}">{{ $industry }}</option>
+                                @endforeach
+                            </select>
+
+                            <select wire:model="filterLocation" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Location</option>
+                                @foreach($locations as $location)
+                                    <option value="{{ $location }}">{{ $location }}</option>
+                                @endforeach
+                            </select>
+
+                            <select wire:model="filterJobTitle" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select Job Title</option>
+                                @foreach($jobTitles as $title)
+                                    <option value="{{ $title }}">{{ $title }}</option>
+                                @endforeach
+                            </select>
+
+                            <input wire:model="filterCompanySize" type="number" placeholder="Min Company Size" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Keywords</label>
+                            <div class="space-y-2">
+                                @foreach($availableKeywords as $keyword)
+                                    <label class="inline-flex items-center mr-4">
+                                        <input type="checkbox" wire:model="filterKeywords" value="{{ $keyword }}" class="mr-2">
+                                        <span class="text-sm">{{ $keyword }}</span>
+                                    </label>
+                                @endforeach
+                                <div class="w-full">
+                                    <label class="inline-flex items-center mr-4">
+                                        <input type="checkbox" wire:click="toggleOtherKeyword" {{ $showOtherKeyword ? 'checked' : '' }} class="mr-2">
+                                        <span class="text-sm">Other</span>
+                                    </label>
+                                    @if($showOtherKeyword)
+                                        <div class="mt-2 flex gap-2">
+                                            <input wire:model="customKeyword" placeholder="Enter custom keyword. Separate with commas" class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <button wire:click="addCustomKeyword" class="px-3 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">Add</button>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <button wire:click="createFilter" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Add Filter
                         </button>
                     </div>
@@ -71,11 +112,22 @@
                     <div class="space-y-2">
                         @foreach ($filters as $filter)
                             <div class="flex items-center justify-between bg-gray-50 p-3 rounded">
-                                <span class="font-medium text-gray-500">{{ $filter->name }}</span>
-                                <button wire:click="deleteFilter({{ $filter->id }})"
-                                    class="text-red-600 hover:text-red-800">
-                                    Delete
-                                </button>
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-medium {{ $filter->is_active ? 'text-gray-900' : 'text-gray-400' }}">{{ $filter->name }}</span>
+                                    @if(!$filter->is_active)
+                                        <span class="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">Inactive</span>
+                                    @endif
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button wire:click="toggleFilter({{ $filter->id }})"
+                                        class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {{ $filter->is_active ? 'bg-blue-600' : 'bg-gray-200' }}">
+                                        <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $filter->is_active ? 'translate-x-4' : 'translate-x-0' }}"></span>
+                                    </button>
+                                    <button wire:click="deleteFilter({{ $filter->id }})"
+                                        class="text-red-600 hover:text-red-800 text-sm">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -97,7 +149,7 @@
                                         </p>
                                     </div>
                                     @if($post->status === 'failed')
-                                        <button wire:click="retryPost({{ $post->id }})" 
+                                        <button wire:click="retryPost({{ $post->id }})"
                                             class="ml-3 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
                                             Retry
                                         </button>
@@ -137,7 +189,7 @@
                             <option value="long">Long Post/Article (Full content)</option>
                         </select>
                     </div>
-                    
+
                     <!-- Post Frequency -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Post Frequency</label>

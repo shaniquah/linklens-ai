@@ -61,6 +61,19 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+/* Blue Switch Class */
+.blue-switch[data-flux-switch] {
+    @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.blue-switch[data-flux-switch][data-checked] {
+    @apply bg-blue-600 hover:bg-blue-700;
+}
+
+.blue-switch[data-flux-switch] span {
+    @apply bg-white shadow-sm;
+}
+
+.blue-switch[data-flux-switch][data-checked] span {
+    @apply bg-white;
+}
