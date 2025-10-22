@@ -5,7 +5,7 @@
         @fluxAppearance
         @fluxScripts
     </head>
-    <body class="min-h-screen bg-white dark:bg-black ">
+    <body class="min-h-screen bg-white/5 dark:bg-black/50 ">
         <style>
             @keyframes float1 {
                 0%, 100% { transform: translate(0, 0) rotate(0deg); }
@@ -24,10 +24,10 @@
 
         <!-- Animated Background Blurs -->
         <div class="fixed inset-0 overflow-hidden pointer-events-none">
-            <div class="blur1 absolute w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl top-10 left-10"></div>
-            <div class="blur2 absolute w-80 h-80 bg-purple-500/8 rounded-full blur-3xl top-1/3 right-20"></div>
-            <div class="blur1 absolute w-72 h-72 bg-blue-500/10 rounded-full blur-3xl bottom-20 left-1/3" style="animation-delay: -5s;"></div>
-            <div class="blur2 absolute w-64 h-64 bg-pink-500/8 rounded-full blur-3xl bottom-10 right-10" style="animation-delay: -10s;"></div>
+            <div class="blur1 absolute w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl top-10 left-10"></div>
+            <div class="blur2 absolute w-80 h-80 bg-purple-500/20 rounded-full blur-3xl top-1/3 right-20"></div>
+            <div class="blur1 absolute w-72 h-72 bg-blue-500/40 rounded-full blur-3xl bottom-20 left-1/3" style="animation-delay: -5s;"></div>
+            <div class="blur2 absolute w-64 h-64 bg-pink-500/10 rounded-full blur-3xl bottom-10 right-10" style="animation-delay: -10s;"></div>
         </div>
         <!-- Header for All Pages -->
         <div class="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-zinc-300/50 dark:bg-black/50 backdrop-blur-sm">
