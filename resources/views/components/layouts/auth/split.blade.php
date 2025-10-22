@@ -38,5 +38,6 @@
                 </div>
             </div>
         </div>
+        @fluxScripts
     </body>
 </html>

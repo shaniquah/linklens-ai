@@ -2,6 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
     <head>
         @include('partials.head')
+        @fluxAppearance
+        @fluxScripts
     </head>
     <body class="min-h-screen bg-white/5 dark:bg-black/50 ">
         <style>

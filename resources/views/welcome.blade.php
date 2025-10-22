@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LinkLens AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @fluxAppearance
 </head>
 
 <body class="bg-black text-white">
@@ -156,6 +157,7 @@
         </div>
     </section>
     </div>
+    @fluxScripts
 </body>
 
 </html>
