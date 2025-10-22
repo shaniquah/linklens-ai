@@ -165,11 +165,11 @@
 
     <!-- Post Generation Modal -->
     @if($showPostModal)
-    <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showPostModal') }" x-show="show">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
 
-            <div class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-zinc-500 text-left align-middle transition-all transform bg-sky-50 shadow-xl rounded-2xl">
+            <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-xl z-10">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-medium text-gray-900">Configure Post Generation</h3>
                     <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600">
