@@ -9,7 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('connection_filters', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true)->after('criteria');
+            if (!Schema::hasColumn('connection_filters', 'is_active')) {
+                $table->boolean('is_active')->default(true)->after('criteria');
+            }
         });
     }
 

@@ -9,7 +9,7 @@
         @endif
 
         @if (!$profile)
-            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+            <div class="bg-yellow-50 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
                 <p>Please connect your LinkedIn account to start automation.</p>
                 <a href="/auth/linkedin" class="bg-blue-500 text-white px-4 py-2 rounded mt-2 inline-block">
                     Connect LinkedIn
@@ -18,7 +18,7 @@
         @else
             <!-- Automation Controls -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="bg-zinc-300 dark:bg-white overflow-hidden shadow rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Automation</h3>
                         <div class="flex items-center justify-between">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="bg-zinc-300 dark:bg-white overflow-hidden shadow rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Post Automation</h3>
                         <div class="flex items-center justify-between">
@@ -48,36 +48,36 @@
             </div>
 
             <!-- Connection Filters -->
-            <div class="bg-white overflow-hidden shadow rounded-lg mb-8">
+            <div class="bg-zinc-300 dark:bg-white overflow-hidden shadow rounded-lg mb-8">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Filters</h3>
 
                     <div class="mb-6 text-zinc-500 space-y-4">
-                        <input wire:model="newFilterName" placeholder="Filter name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input wire:model="newFilterName" placeholder="Filter name" class="w-full border border-white dark:border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                         <div class="grid grid-cols-2 gap-4">
-                            <select wire:model="filterIndustry" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select wire:model="filterIndustry" class="w-full border border-white dark:border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Industry</option>
                                 @foreach($industries as $industry)
                                     <option value="{{ $industry }}">{{ $industry }}</option>
                                 @endforeach
                             </select>
 
-                            <select wire:model="filterLocation" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select wire:model="filterLocation" class="w-full border border-white dark:border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Location</option>
                                 @foreach($locations as $location)
                                     <option value="{{ $location }}">{{ $location }}</option>
                                 @endforeach
                             </select>
 
-                            <select wire:model="filterJobTitle" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select wire:model="filterJobTitle" class="w-full border border-white dark:border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Job Title</option>
                                 @foreach($jobTitles as $title)
                                     <option value="{{ $title }}">{{ $title }}</option>
                                 @endforeach
                             </select>
 
-                            <input wire:model="filterCompanySize" type="number" placeholder="Min Company Size" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input wire:model="filterCompanySize" type="number" placeholder="Min Company Size" class="w-full border border-white dark:border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         <div>
@@ -96,7 +96,7 @@
                                     </label>
                                     @if($showOtherKeyword)
                                         <div class="mt-2 flex gap-2">
-                                            <input wire:model="customKeyword" placeholder="Enter custom keyword. Separate with commas" class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <input wire:model="customKeyword" placeholder="Enter custom keyword. Separate with commas" class="flex-1 border border-white dark:border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <button wire:click="addCustomKeyword" class="px-3 py-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">Add</button>
                                         </div>
                                     @endif
@@ -111,7 +111,7 @@
 
                     <div class="space-y-2">
                         @foreach ($filters as $filter)
-                            <div class="flex items-center justify-between bg-gray-50 p-3 rounded">
+                            <div class="flex items-center justify-between bg-zinc-200 dark:bg-gray-50 p-3 rounded">
                                 <div class="flex items-center space-x-3">
                                     <span class="font-medium {{ $filter->is_active ? 'text-gray-900' : 'text-gray-400' }}">{{ $filter->name }}</span>
                                     @if(!$filter->is_active)
@@ -135,7 +135,7 @@
             </div>
 
             <!-- Recent Posts -->
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-zinc-300 dark:bg-white overflow-hidden shadow rounded-lg">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Posts</h3>
                     <div class="space-y-4">
@@ -165,11 +165,11 @@
 
     <!-- Post Generation Modal -->
     @if($showPostModal)
-    <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: @entangle('showPostModal') }" x-show="show">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
 
-            <div class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-zinc-500 text-left align-middle transition-all transform bg-sky-50 shadow-xl rounded-2xl">
+            <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-xl z-10">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-medium text-gray-900">Configure Post Generation</h3>
                     <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600">

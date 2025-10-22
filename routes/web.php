@@ -39,6 +39,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/linkedin', LinkedinDashboard::class)->name('linkedin.dashboard');
     Route::get('/auth/linkedin', [LinkedinController::class, 'redirect'])->name('linkedin.auth');
     Route::get('/auth/linkedin/callback', [LinkedinController::class, 'callback'])->name('linkedin.callback');
+    
+    // Analytics Routes
+    Route::get('/analytics', \App\Livewire\AnalyticsDashboard::class)->name('analytics.dashboard');
 });
 
 require __DIR__.'/auth.php';
