@@ -72,7 +72,7 @@
                     </h1>
                 </a>
             </div>
-            <div class="backdrop-blur-sm bg-white/5 rounded-2xl p-8 border border-white/10">
+            <div class="backdrop-blur-sm bg-white/70 dark:bg-white/5 rounded-2xl p-8 border border-white/10">
                 {{ $slot }}
             </div>
         </div>

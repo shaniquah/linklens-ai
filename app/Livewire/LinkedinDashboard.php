@@ -150,6 +150,10 @@ class LinkedinDashboard extends Component
         $this->profile->refresh();
         
         $status = $this->profile->auto_accept_connections ? 'enabled' : 'disabled';
+        auth()->user()->logActivity('setting_changed', "Auto-accept connections {$status}", [
+            'setting' => 'auto_accept_connections',
+            'value' => $this->profile->auto_accept_connections
+        ]);
         session()->flash('message', "Auto-accept connections {$status}.");
     }
 
@@ -165,12 +169,17 @@ class LinkedinDashboard extends Component
         $this->profile->refresh();
         
         $status = $this->profile->post_automation_enabled ? 'enabled' : 'disabled';
+        auth()->user()->logActivity('setting_changed', "Post automation {$status}", [
+            'setting' => 'post_automation_enabled',
+            'value' => $this->profile->post_automation_enabled
+        ]);
         session()->flash('message', "Post automation {$status}.");
     }
 
     public function processConnections()
     {
         ProcessConnectionRequests::dispatch($this->profile);
+        auth()->user()->logActivity('connection_processing', 'Started processing connection requests');
         session()->flash('message', 'Processing connection requests...');
     }
 
@@ -198,6 +207,12 @@ class LinkedinDashboard extends Component
             'themes' => $this->postThemes,
             'tone' => $this->tone,
             'diction' => $this->diction,
+        ]);
+        
+        auth()->user()->logActivity('post_created', 'Generated new automated post', [
+            'type' => $this->postType,
+            'frequency' => $this->postFrequency,
+            'voice' => $this->speakerVoice
         ]);
         
         $this->showPostModal = false;
@@ -258,6 +273,11 @@ class LinkedinDashboard extends Component
             'user_id' => auth()->id(),
             'name' => $this->newFilterName,
             'criteria' => $criteria,
+        ]);
+        
+        auth()->user()->logActivity('filter_created', "Created connection filter: {$this->newFilterName}", [
+            'filter_name' => $this->newFilterName,
+            'criteria' => $criteria
         ]);
 
         $this->reset(['newFilterName', 'filterIndustry', 'filterLocation', 'filterJobTitle', 'filterCompanySize', 'showOtherKeyword', 'customKeyword']);
