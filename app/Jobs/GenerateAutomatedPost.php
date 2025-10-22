@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\AutomatedPost;
 use App\Models\LinkedinProfile;
+use App\Services\BedrockAgentService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,8 +21,12 @@ class GenerateAutomatedPost implements ShouldQueue
         private array $settings = []
     ) {}
 
-    public function handle(): void
+    private BedrockAgentService $bedrockService;
+
+    public function handle(BedrockAgentService $bedrockService): void
     {
+        $this->bedrockService = $bedrockService;
+
         if (!$this->profile->post_automation_enabled) {
             return;
         }
@@ -55,21 +60,11 @@ class GenerateAutomatedPost implements ShouldQueue
 
     private function generatePostContent(): string
     {
-        $type = $this->settings['type'] ?? 'medium';
-        $voice = $this->settings['voice'] ?? 'professional';
+        // Use AWS Bedrock for AI-powered content generation
+        $content = $this->bedrockService->generateLinkedInPost($this->settings);
+        
+        // Add emoji based on tone
         $tone = $this->settings['tone'] ?? 'informative';
-        $themes = $this->settings['themes'] ?? ['industry_insights'];
-        $diction = $this->settings['diction'] ?? 'business';
-
-        $selectedTheme = $themes[array_rand($themes)];
-
-        $content = match($type) {
-            'short' => $this->generateShortPost($selectedTheme, $tone),
-            'medium' => $this->generateMediumPost($selectedTheme, $tone),
-            'long' => $this->generateLongPost($selectedTheme, $tone),
-            default => $this->generateMediumPost($selectedTheme, $tone)
-        };
-
         $emoji = match($tone) {
             'inspirational' => '✨',
             'educational' => '📚',
@@ -77,7 +72,7 @@ class GenerateAutomatedPost implements ShouldQueue
             default => '💡'
         };
 
-        return $emoji . ' ' . $content . ' #LinkedIn #Professional #Growth';
+        return $emoji . ' ' . $content;
     }
 
     private function generateShortPost($theme, $tone): string

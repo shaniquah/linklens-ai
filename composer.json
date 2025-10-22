@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "aws/aws-sdk-php": "^3.356",
         "codeat3/blade-carbon-icons": "^2.36",
         "codeat3/blade-google-material-design-icons": "^1.20",
         "guzzlehttp/guzzle": "^7.10",
