@@ -23,7 +23,9 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Automation</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Auto-accept connections</span>
-                            <flux:switch :checked="$profile->auto_accept_connections" wire:click="toggleAutoAccept" class="blue-switch" />
+                            <button wire:click="toggleAutoAccept" class="toggle-switch {{ $profile->auto_accept_connections ? 'checked' : '' }}">
+                                <span></span>
+                            </button>
                         </div>
                         <button wire:click="processConnections"
                             class="mt-4 bg-blue-500 text-white px-4 py-2 rounded text-sm">
@@ -37,7 +39,9 @@
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Post Automation</h3>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Auto-generate posts</span>
-                            <flux:switch :checked="$profile->post_automation_enabled" wire:click="togglePostAutomation" class="blue-switch" />
+                            <button wire:click="togglePostAutomation" class="toggle-switch {{ $profile->post_automation_enabled ? 'checked' : '' }}">
+                                <span></span>
+                            </button>
                         </div>
                         <button wire:click="generatePost"
                             class="mt-4 bg-green-500 text-white px-4 py-2 rounded text-sm">

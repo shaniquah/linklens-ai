@@ -9,55 +9,50 @@
             @if ($twoFactorEnabled)
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <flux:badge color="green">{{ __('Enabled') }}</flux:badge>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Enabled') }}</span>
                     </div>
 
-                    <flux:text>
+                    <p class="text-gray-600 dark:text-gray-400">
                         {{ __('With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.') }}
-                    </flux:text>
+                    </p>
 
                     <livewire:settings.two-factor.recovery-codes :$requiresConfirmation/>
 
                     <div class="flex justify-start">
-                        <flux:button
-                            variant="danger"
-                            icon="shield-exclamation"
-                            icon:variant="outline"
+                        <button
                             wire:click="disable"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             {{ __('Disable 2FA') }}
-                        </flux:button>
+                        </button>
                     </div>
                 </div>
             @else
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <flux:badge color="red">{{ __('Disabled') }}</flux:badge>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Disabled') }}</span>
                     </div>
 
-                    <flux:text variant="subtle">
+                    <p class="text-gray-500 dark:text-gray-400">
                         {{ __('When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.') }}
-                    </flux:text>
+                    </p>
 
-                    <flux:button
-                        variant="primary"
-                        icon="shield-check"
-                        icon:variant="outline"
+                    <button
                         wire:click="enable"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
                     >
                         {{ __('Enable 2FA') }}
-                    </flux:button>
+                    </button>
                 </div>
             @endif
         </div>
     </x-settings.layout>
 
-    <flux:modal
-        name="two-factor-setup-modal"
-        class="max-w-md md:min-w-md"
-        @close="closeModal"
-        wire:model="showModal"
-    >
+    @if($showModal)
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
+            <div class="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl z-10">
         <div class="space-y-6">
             <div class="flex flex-col items-center space-y-4">
                 <div class="p-0.5 w-auto rounded-full border border-stone-100 dark:border-stone-600 bg-white dark:bg-stone-800 shadow-sm">
@@ -79,8 +74,8 @@
                 </div>
 
                 <div class="space-y-2 text-center">
-                    <flux:heading size="lg">{{ $this->modalConfig['title'] }}</flux:heading>
-                    <flux:text>{{ $this->modalConfig['description'] }}</flux:text>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $this->modalConfig['title'] }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $this->modalConfig['description'] }}</p>
                 </div>
             </div>
 
@@ -94,29 +89,26 @@
                             autocomplete="one-time-code"
                         />
                         @error('code')
-                            <flux:text color="red">
+                            <p class="text-red-600 dark:text-red-400 text-sm">
                                 {{ $message }}
-                            </flux:text>
+                            </p>
                         @enderror
                     </div>
 
                     <div class="flex items-center space-x-3">
-                        <flux:button
-                            variant="outline"
-                            class="flex-1"
+                        <button
                             wire:click="resetVerification"
+                            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
                         >
                             {{ __('Back') }}
-                        </flux:button>
+                        </button>
 
-                        <flux:button
-                            variant="primary"
-                            class="flex-1"
+                        <button
                             wire:click="confirmTwoFactor"
-                            x-bind:disabled="$wire.code.length < 6"
+                            class="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
                         >
                             {{ __('Confirm') }}
-                        </flux:button>
+                        </button>
                     </div>
                 </div>
             @else
@@ -139,14 +131,13 @@
                 </div>
 
                 <div>
-                    <flux:button
-                        :disabled="$errors->has('setupData')"
-                        variant="primary"
-                        class="w-full"
+                    <button
                         wire:click="showVerificationIfNecessary"
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 disabled:opacity-50"
+                        @if($errors->has('setupData')) disabled @endif
                     >
                         {{ $this->modalConfig['buttonText'] }}
-                    </flux:button>
+                    </button>
                 </div>
 
                 <div class="space-y-4">
@@ -201,6 +192,8 @@
                     </div>
                 </div>
             @endif
+            </div>
         </div>
-    </flux:modal>
+    </div>
+    @endif
 </section>

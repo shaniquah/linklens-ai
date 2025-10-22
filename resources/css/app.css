@@ -1,10 +1,7 @@
 @import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -47,33 +44,19 @@
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+/* Custom Toggle Switch */
+.toggle-switch {
+    @apply relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 bg-gray-200 dark:bg-gray-700;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+.toggle-switch.checked {
+    @apply bg-blue-600;
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+.toggle-switch span {
+    @apply pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0;
 }
 
-/* Blue Switch Class */
-.blue-switch[data-flux-switch] {
-    @apply bg-gray-200 dark:bg-gray-700;
-}
-
-.blue-switch[data-flux-switch][data-checked] {
-    @apply bg-blue-600 hover:bg-blue-700;
-}
-
-.blue-switch[data-flux-switch] span {
-    @apply bg-white shadow-sm;
-}
-
-.blue-switch[data-flux-switch][data-checked] span {
-    @apply bg-white;
+.toggle-switch.checked span {
+    @apply translate-x-5;
 }
