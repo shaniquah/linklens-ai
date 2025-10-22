@@ -1,0 +1,165 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Light grey background -->
+  <rect width="100%" height="100%" fill="#F8F9FA"/>
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #2D3748; }
+      .subtitle { font: bold 16px sans-serif; fill: #4A5568; }
+      .label { font: 12px sans-serif; fill: #2D3748; }
+      .small-label { font: 10px sans-serif; fill: #4A5568; }
+      .aws-box { fill: #FF9900; stroke: #232F3E; stroke-width: 2; }
+      .laravel-box { fill: #FF2D20; stroke: #FFFFFF; stroke-width: 2; }
+      .external-box { fill: #4CAF50; stroke: #FFFFFF; stroke-width: 2; }
+      .frontend-box { fill: #06B6D4; stroke: #FFFFFF; stroke-width: 2; }
+      .database-box { fill: #336791; stroke: #FFFFFF; stroke-width: 2; }
+      .arrow { stroke: #4A5568; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .bidirectional { stroke: #4A5568; stroke-width: 2; fill: none; marker-end: url(#arrowhead); marker-start: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4A5568" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="title">LinkLens AI - System Architecture</text>
+  
+  <!-- Frontend Layer -->
+  <rect x="50" y="60" width="300" height="120" rx="10" class="frontend-box" opacity="0.9"/>
+  <text x="200" y="80" text-anchor="middle" class="subtitle" fill="white">Frontend Layer</text>
+  <rect x="70" y="90" width="120" height="40" rx="5" fill="white" opacity="0.9"/>
+  <text x="130" y="105" text-anchor="middle" class="small-label">Web Dashboard</text>
+  <text x="130" y="118" text-anchor="middle" class="small-label">Livewire + Flux Pro</text>
+  <rect x="210" y="90" width="120" height="40" rx="5" fill="white" opacity="0.9"/>
+  <text x="270" y="105" text-anchor="middle" class="small-label">WebSocket Client</text>
+  <text x="270" y="118" text-anchor="middle" class="small-label">Real-time Updates</text>
+  
+  <!-- Laravel Application Layer -->
+  <rect x="50" y="200" width="700" height="280" rx="10" class="laravel-box" opacity="0.9"/>
+  <text x="400" y="220" text-anchor="middle" class="subtitle" fill="white">Laravel Application Layer</text>
+  
+  <!-- Controllers -->
+  <rect x="70" y="240" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="145" y="255" text-anchor="middle" class="small-label">Controllers</text>
+  <text x="145" y="270" text-anchor="middle" class="small-label">LinkedinController</text>
+  <text x="145" y="285" text-anchor="middle" class="small-label">API Controllers</text>
+  
+  <!-- Livewire Components -->
+  <rect x="240" y="240" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="315" y="255" text-anchor="middle" class="small-label">Livewire Components</text>
+  <text x="315" y="270" text-anchor="middle" class="small-label">LinkedinDashboard</text>
+  <text x="315" y="285" text-anchor="middle" class="small-label">AnalyticsDashboard</text>
+  
+  <!-- Services -->
+  <rect x="410" y="240" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="485" y="255" text-anchor="middle" class="small-label">Services</text>
+  <text x="485" y="270" text-anchor="middle" class="small-label">BedrockAgentService</text>
+  <text x="485" y="285" text-anchor="middle" class="small-label">AnalyticsService</text>
+  
+  <!-- Job Queue System -->
+  <rect x="580" y="240" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="655" y="255" text-anchor="middle" class="small-label">Job Queue System</text>
+  <text x="655" y="270" text-anchor="middle" class="small-label">GenerateAutomatedPost</text>
+  <text x="655" y="285" text-anchor="middle" class="small-label">ProcessConnectionRequests</text>
+  
+  <!-- Database -->
+  <rect x="70" y="340" width="660" height="120" rx="5" class="database-box" opacity="0.9"/>
+  <text x="400" y="360" text-anchor="middle" class="subtitle" fill="white">Models &amp; Database</text>
+  <rect x="90" y="370" width="100" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="140" y="390" text-anchor="middle" class="small-label">User Model</text>
+  <rect x="210" y="370" width="100" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="260" y="390" text-anchor="middle" class="small-label">LinkedinProfile</text>
+  <rect x="330" y="370" width="100" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="380" y="390" text-anchor="middle" class="small-label">AutomatedPost</text>
+  <rect x="450" y="370" width="100" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="500" y="390" text-anchor="middle" class="small-label">ConnectionFilter</text>
+  <rect x="570" y="370" width="100" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="620" y="390" text-anchor="middle" class="small-label">UserActivity</text>
+  <ellipse cx="400" cy="430" rx="80" ry="20" class="database-box"/>
+  <text x="400" y="435" text-anchor="middle" class="small-label" fill="white">MySQL Database</text>
+  
+  <!-- AWS Cloud Infrastructure -->
+  <rect x="800" y="60" width="350" height="420" rx="10" class="aws-box" opacity="0.9"/>
+  <text x="975" y="80" text-anchor="middle" class="subtitle" fill="white">AWS Cloud Infrastructure</text>
+  
+  <!-- AI/ML Services -->
+  <rect x="820" y="100" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="895" y="115" text-anchor="middle" class="small-label">AI/ML Services</text>
+  <text x="895" y="130" text-anchor="middle" class="small-label">Amazon Bedrock</text>
+  <text x="895" y="145" text-anchor="middle" class="small-label">Nova Lite LLM</text>
+  <text x="895" y="160" text-anchor="middle" class="small-label">Bedrock Agent</text>
+  
+  <!-- Compute Services -->
+  <rect x="990" y="100" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="1065" y="115" text-anchor="middle" class="small-label">Compute Services</text>
+  <text x="1065" y="130" text-anchor="middle" class="small-label">Lambda Functions</text>
+  <text x="1065" y="145" text-anchor="middle" class="small-label">Content Processor</text>
+  <text x="1065" y="160" text-anchor="middle" class="small-label">Connection Analyzer</text>
+  
+  <!-- Storage & API -->
+  <rect x="820" y="200" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="895" y="215" text-anchor="middle" class="small-label">Storage &amp; API</text>
+  <text x="895" y="230" text-anchor="middle" class="small-label">Amazon S3</text>
+  <text x="895" y="245" text-anchor="middle" class="small-label">API Gateway</text>
+  <text x="895" y="260" text-anchor="middle" class="small-label">Content Storage</text>
+  
+  <!-- Monitoring -->
+  <rect x="990" y="200" width="150" height="80" rx="5" fill="white" opacity="0.9"/>
+  <text x="1065" y="215" text-anchor="middle" class="small-label">Monitoring</text>
+  <text x="1065" y="230" text-anchor="middle" class="small-label">CloudWatch</text>
+  <text x="1065" y="245" text-anchor="middle" class="small-label">Logs &amp; Metrics</text>
+  
+  <!-- External APIs -->
+  <rect x="400" y="520" width="200" height="100" rx="10" class="external-box" opacity="0.9"/>
+  <text x="500" y="540" text-anchor="middle" class="subtitle" fill="white">External APIs</text>
+  <rect x="420" y="550" width="80" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="460" y="570" text-anchor="middle" class="small-label">LinkedIn API v2</text>
+  <rect x="520" y="550" width="60" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="550" y="570" text-anchor="middle" class="small-label">OpenAI API</text>
+  
+  <!-- Real-time Services -->
+  <rect x="50" y="520" width="200" height="100" rx="10" class="laravel-box" opacity="0.9"/>
+  <text x="150" y="540" text-anchor="middle" class="subtitle" fill="white">Real-time Services</text>
+  <rect x="70" y="550" width="80" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="110" y="570" text-anchor="middle" class="small-label">Laravel Reverb</text>
+  <rect x="160" y="550" width="70" height="30" rx="3" fill="white" opacity="0.9"/>
+  <text x="195" y="570" text-anchor="middle" class="small-label">Redis Cache</text>
+  
+  <!-- Arrows showing data flow -->
+  <!-- Frontend to Laravel -->
+  <line x1="200" y1="180" x2="315" y2="240" class="arrow"/>
+  
+  <!-- Laravel to AWS -->
+  <line x1="560" y1="280" x2="820" y2="140" class="arrow"/>
+  
+  <!-- Laravel to External APIs -->
+  <line x1="315" y1="320" x2="460" y2="520" class="arrow"/>
+  
+  <!-- Real-time connection -->
+  <line x1="150" y1="520" x2="270" y2="180" class="bidirectional"/>
+  
+  <!-- AWS internal connections -->
+  <line x1="970" y1="140" x2="990" y2="140" class="arrow"/>
+  <line x1="895" y1="180" x2="895" y2="200" class="arrow"/>
+  
+  <!-- Legend -->
+  <rect x="50" y="650" width="600" height="120" rx="5" fill="#F7FAFC" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="350" y="670" text-anchor="middle" class="subtitle">Technology Stack Legend</text>
+  
+  <rect x="70" y="680" width="20" height="15" class="frontend-box"/>
+  <text x="100" y="692" class="small-label">Frontend (Livewire, TailwindCSS, Vite)</text>
+  
+  <rect x="70" y="700" width="20" height="15" class="laravel-box"/>
+  <text x="100" y="712" class="small-label">Laravel (PHP 8.2+, Eloquent, Fortify, Reverb)</text>
+  
+  <rect x="70" y="720" width="20" height="15" class="aws-box"/>
+  <text x="100" y="732" class="small-label">AWS (Bedrock, Lambda, S3, API Gateway, CloudWatch)</text>
+  
+  <rect x="350" y="680" width="20" height="15" class="external-box"/>
+  <text x="380" y="692" class="small-label">External APIs (LinkedIn v2, OpenAI)</text>
+  
+  <rect x="350" y="700" width="20" height="15" class="database-box"/>
+  <text x="380" y="712" class="small-label">Database &amp; Storage (MySQL, Redis)</text>
+  
+  <line x1="350" y1="720" x2="370" y2="720" class="arrow"/>
+  <text x="380" y="732" class="small-label">Data Flow Direction</text>
+</svg>
