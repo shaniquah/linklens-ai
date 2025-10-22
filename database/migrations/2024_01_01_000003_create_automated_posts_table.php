@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamp('posted_at')->nullable();
             $table->json('engagement_data')->nullable();
+            $table->integer('retry_count')->default(0);
             $table->timestamps();
         });
     }
