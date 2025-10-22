@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex min-h-screen w-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">LinkLens AI Dashboard</h1>
             <p class="text-gray-600 dark:text-gray-400">Automate your LinkedIn presence with AI-powered posts and smart connection management</p>
@@ -20,7 +20,7 @@
                 </div>
             </a>
 
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            <a href="{{ route('analytics.dashboard') }}" class="group relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 hover:border-green-300 transition-colors">
                 <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20">
                     <div class="flex h-full flex-col justify-center items-center p-6">
                         <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-3">
@@ -29,10 +29,10 @@
                             </svg>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Analytics</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">Coming Soon</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 text-center">View insights & activity</p>
                     </div>
                 </div>
-            </div>
+            </a>
 
             <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
                 <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
@@ -50,12 +50,18 @@
             </div>
         </div>
 
-        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+        <div class="relative min-h-[400px] flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
             <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/20 dark:to-gray-800/20">
-                <div class="flex h-full flex-col justify-center items-center p-8">
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Welcome to LinkLens AI</h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-center max-w-md">Your AI-powered LinkedIn automation assistant is ready to help you grow your professional network and maintain an engaging presence.</p>
-                </div>
+                @if(auth()->user()->hasAutomationHistory())
+                    <div class="h-full p-6 overflow-hidden flex flex-col">
+                        <livewire:automation-history />
+                    </div>
+                @else
+                    <div class="flex h-full flex-col justify-center items-center p-8">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Welcome to LinkLens AI</h2>
+                        <p class="text-gray-600 dark:text-gray-400 text-center max-w-md">Your AI-powered LinkedIn automation assistant is ready to help you grow your professional network and maintain an engaging presence.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

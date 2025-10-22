@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,5 +65,30 @@ class User extends Authenticatable
     public function linkedinProfile(): HasOne
     {
         return $this->hasOne(LinkedinProfile::class);
+    }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class);
+    }
+
+    public function automatedPosts(): HasMany
+    {
+        return $this->hasMany(AutomatedPost::class);
+    }
+
+    public function connectionFilters(): HasMany
+    {
+        return $this->hasMany(ConnectionFilter::class);
+    }
+
+    public function hasAutomationHistory(): bool
+    {
+        return $this->automatedPosts()->exists() || $this->connectionFilters()->exists();
+    }
+
+    public function logActivity(string $action, string $description, array $metadata = []): void
+    {
+        UserActivity::log($this->id, $action, $description, $metadata);
     }
 }
