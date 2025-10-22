@@ -169,10 +169,10 @@
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75" wire:click="closeModal"></div>
 
-            <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-xl z-10">
+            <div class="relative w-full max-w-2xl p-6 bg-white dark:bg-zinc-500 rounded-2xl shadow-xl z-10">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Configure Post Generation</h3>
-                    <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Configure Post Generation</h3>
+                    <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -182,8 +182,8 @@
                 <form wire:submit.prevent="savePostSettings" class="space-y-6">
                     <!-- Post Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Type</label>
-                        <select wire:model="postType" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Post Type</label>
+                        <select wire:model="postType" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-600 text-gray-900 dark:text-white">
                             <option value="short">Short Post (1-2 sentences)</option>
                             <option value="medium">Medium Post (3-5 sentences)</option>
                             <option value="long">Long Post/Article (Full content)</option>
@@ -192,8 +192,8 @@
 
                     <!-- Post Frequency -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Frequency</label>
-                        <select wire:model="postFrequency" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Post Frequency</label>
+                        <select wire:model="postFrequency" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-600 text-gray-900 dark:text-white">
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
                             <option value="bi-weekly">Bi-weekly</option>
@@ -203,13 +203,13 @@
                     <!-- Approval Required -->
                     <div class="flex items-center">
                         <input type="checkbox" wire:model="requireApproval" id="approval" class="mr-2">
-                        <label for="approval" class="text-sm font-medium text-gray-700">Require approval before posting</label>
+                        <label for="approval" class="text-sm font-medium text-gray-700 dark:text-white">Require approval before posting</label>
                     </div>
 
                     <!-- Speaker Voice -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Speaker Voice</label>
-                        <select wire:model="speakerVoice" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Speaker Voice</label>
+                        <select wire:model="speakerVoice" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-600 text-gray-900 dark:text-white">
                             <option value="professional">Professional</option>
                             <option value="casual">Casual</option>
                             <option value="authoritative">Authoritative</option>
@@ -219,31 +219,31 @@
 
                     <!-- Post Themes -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Post Themes</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Post Themes</label>
                         <div class="grid grid-cols-2 gap-2">
                             <label class="flex items-center">
                                 <input type="checkbox" wire:model="postThemes" value="industry_insights" class="mr-2">
-                                <span class="text-sm">Industry Insights</span>
+                                <span class="text-sm text-gray-900 dark:text-white">Industry Insights</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="checkbox" wire:model="postThemes" value="career_tips" class="mr-2">
-                                <span class="text-sm">Career Tips</span>
+                                <span class="text-sm text-gray-900 dark:text-white">Career Tips</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="checkbox" wire:model="postThemes" value="networking" class="mr-2">
-                                <span class="text-sm">Networking</span>
+                                <span class="text-sm text-gray-900 dark:text-white">Networking</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="checkbox" wire:model="postThemes" value="motivation" class="mr-2">
-                                <span class="text-sm">Motivation</span>
+                                <span class="text-sm text-gray-900 dark:text-white">Motivation</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- Tone -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tone</label>
-                        <select wire:model="tone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Tone</label>
+                        <select wire:model="tone" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-600 text-gray-900 dark:text-white">
                             <option value="informative">Informative</option>
                             <option value="inspirational">Inspirational</option>
                             <option value="educational">Educational</option>
@@ -253,8 +253,8 @@
 
                     <!-- Diction -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Diction</label>
-                        <select wire:model="diction" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Diction</label>
+                        <select wire:model="diction" class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-600 text-gray-900 dark:text-white">
                             <option value="business">Business</option>
                             <option value="technical">Technical</option>
                             <option value="conversational">Conversational</option>
@@ -264,7 +264,7 @@
 
                     <!-- Actions -->
                     <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" wire:click="closeModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200">
+                        <button type="button" wire:click="closeModal" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-600 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700">
                             Cancel
                         </button>
                         <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
@@ -284,6 +284,10 @@
             Echo.private('user.{{ auth()->id() }}')
                 .listen('PostCreated', (e) => {
                     @this.call('addNewPost', e);
+                })
+                .listen('PostStale', (e) => {
+                    @this.call('loadData');
+                    console.log(`Post ${e.post_id} has been pending for ${e.minutes_pending} minutes (retry ${e.retry_count}/5)`);
                 });
         }
     });
