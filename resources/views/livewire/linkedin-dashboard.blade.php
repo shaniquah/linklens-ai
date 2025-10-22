@@ -284,6 +284,10 @@
             Echo.private('user.{{ auth()->id() }}')
                 .listen('PostCreated', (e) => {
                     @this.call('addNewPost', e);
+                })
+                .listen('PostStale', (e) => {
+                    @this.call('loadData');
+                    console.log(`Post ${e.post_id} has been pending for ${e.minutes_pending} minutes (retry ${e.retry_count}/5)`);
                 });
         }
     });

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\LinkedinProfile;
-use App\Services\BedrockAgentService;
+use App\Services\SimplifiedBedrockService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,7 +20,7 @@ class ProcessConnectionRequests implements ShouldQueue
         private LinkedinProfile $profile
     ) {}
 
-    public function handle(BedrockAgentService $bedrockService): void
+    public function handle(SimplifiedBedrockService $bedrockService): void
     {
         if (!$this->profile->auto_accept_connections) {
             return;
@@ -52,7 +52,7 @@ class ProcessConnectionRequests implements ShouldQueue
         return [];
     }
 
-    private function processConnectionRequest(array $request, BedrockAgentService $bedrockService): void
+    private function processConnectionRequest(array $request, SimplifiedBedrockService $bedrockService): void
     {
         $inviterProfile = $this->getInviterProfile($request['from'] ?? '');
         

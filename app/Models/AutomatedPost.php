@@ -14,6 +14,7 @@ class AutomatedPost extends Model
         'scheduled_at',
         'posted_at',
         'engagement_data',
+        'retry_count',
     ];
 
     protected $casts = [
@@ -37,6 +38,14 @@ class AutomatedPost extends Model
 
     public function markAsFailed(): void
     {
-        $this->update(['status' => 'failed']);
+        $this->update([
+            'status' => 'failed',
+            'retry_count' => $this->retry_count + 1
+        ]);
+    }
+    
+    public function canRetry(): bool
+    {
+        return $this->retry_count < 5;
     }
 }

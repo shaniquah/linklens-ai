@@ -15,6 +15,9 @@ return [
         ],
     ],
     
+    'bearer_token_bedrock' => env('AWS_BEARER_TOKEN_BEDROCK'),
+    'bedrock_region' => env('AWS_BEDROCK_REGION', 'us-east-1'),
+    
     'lambda' => [
         'region' => env('AWS_LAMBDA_REGION', 'us-east-1'),
         'functions' => [

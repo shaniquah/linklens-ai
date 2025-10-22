@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\AutomatedPost;
 use App\Models\LinkedinProfile;
-use App\Services\BedrockAgentService;
+use App\Services\SimplifiedBedrockService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,9 +21,9 @@ class GenerateAutomatedPost implements ShouldQueue
         private array $settings = []
     ) {}
 
-    private BedrockAgentService $bedrockService;
+    private SimplifiedBedrockService $bedrockService;
 
-    public function handle(BedrockAgentService $bedrockService): void
+    public function handle(SimplifiedBedrockService $bedrockService): void
     {
         $this->bedrockService = $bedrockService;
 
@@ -40,6 +40,15 @@ class GenerateAutomatedPost implements ShouldQueue
             return;
         }
 
+        // Handle retry scenario
+        if (isset($this->settings['retry']) && isset($this->settings['post_id'])) {
+            $existingPost = AutomatedPost::find($this->settings['post_id']);
+            if ($existingPost && $existingPost->canRetry()) {
+                $this->retryPost($existingPost);
+                return;
+            }
+        }
+        
         $content = $this->generatePostContent();
 
         $post = AutomatedPost::create([
@@ -73,6 +82,28 @@ class GenerateAutomatedPost implements ShouldQueue
         };
 
         return $emoji . ' ' . $content;
+    }
+    
+    private function retryPost(AutomatedPost $post): void
+    {
+        $response = Http::withToken($this->profile->access_token)
+            ->post('https://api.linkedin.com/v2/ugcPosts', [
+                'author' => "urn:li:person:{$this->profile->linkedin_id}",
+                'lifecycleState' => 'PUBLISHED',
+                'specificContent' => [
+                    'com.linkedin.ugc.ShareContent' => [
+                        'shareCommentary' => ['text' => $post->content],
+                        'shareMediaCategory' => 'NONE',
+                    ],
+                ],
+                'visibility' => ['com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'],
+            ]);
+
+        if ($response->successful()) {
+            $post->markAsPosted();
+        } else {
+            $post->markAsFailed();
+        }
     }
 
     private function generateShortPost($theme, $tone): string
