@@ -1,10 +1,7 @@
 @import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -36,44 +33,27 @@
     }
 }
 
-@layer base {
-
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+/* Custom Toggle Switch Styles */
+.toggle-switch {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+.toggle-switch.enabled {
+    @apply bg-blue-600;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+.toggle-switch.disabled {
+    @apply bg-gray-200;
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+.toggle-switch .toggle-thumb {
+    @apply inline-block h-4 w-4 transform rounded-full bg-white transition-transform;
 }
 
-/* Blue Switch Class */
-.blue-switch[data-flux-switch] {
-    @apply bg-gray-200 dark:bg-gray-700;
+.toggle-switch.enabled .toggle-thumb {
+    @apply translate-x-6;
 }
 
-.blue-switch[data-flux-switch][data-checked] {
-    @apply bg-blue-600 hover:bg-blue-700;
-}
-
-.blue-switch[data-flux-switch] span {
-    @apply bg-white shadow-sm;
-}
-
-.blue-switch[data-flux-switch][data-checked] span {
-    @apply bg-white;
+.toggle-switch.disabled .toggle-thumb {
+    @apply translate-x-1;
 }
