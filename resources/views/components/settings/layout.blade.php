@@ -1,12 +1,16 @@
 <div class="flex items-start max-md:flex-col">
     <div class="me-10 w-full pb-4 md:w-[220px]">
         <nav class="space-y-1">
-            <a href="{{ route('settings.profile') }}" wire:navigate class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.profile') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Profile') }}</a>
-            <a href="{{ route('settings.password') }}" wire:navigate class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.password') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Password') }}</a>
+            <a href="{{ route('settings.profile') }}" wire:navigate
+                class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.profile') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Profile') }}</a>
+            <a href="{{ route('settings.password') }}" wire:navigate
+                class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.password') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Password') }}</a>
             @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
-                <a href="{{ route('two-factor.show') }}" wire:navigate class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('two-factor.show') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Two-Factor Auth') }}</a>
+                <a href="{{ route('two-factor.show') }}" wire:navigate
+                    class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('two-factor.show') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Two-Factor Auth') }}</a>
             @endif
-            <a href="{{ route('settings.appearance') }}" wire:navigate class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.appearance') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Appearance') }}</a>
+            <a href="{{ route('settings.appearance') }}" wire:navigate
+                class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('settings.appearance') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">{{ __('Appearance') }}</a>
         </nav>
     </div>
 
